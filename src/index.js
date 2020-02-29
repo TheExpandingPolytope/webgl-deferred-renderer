@@ -1,8 +1,8 @@
 const OBJMTLLoader = require('obj-mtl-loader');
 const objMtlLoader = new OBJMTLLoader();
 
-const objPath = '../assets/sponza/sponza.obj';
-const mtlPath = '../assets/sponza/sponza.mtl';
+const objPath = 'assets/sponza/sponza.obj';
+const mtlPath = 'assets/sponza/sponza.mtl';
 
 const canvas = document.querySelector('canvas');
 const gl = canvas.getContext('webgl2');

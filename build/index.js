@@ -513,7 +513,7 @@ eval("module.exports = extend\n\nvar hasOwnProperty = Object.prototype.hasOwnPro
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const OBJMTLLoader = __webpack_require__(/*! obj-mtl-loader */ \"./node_modules/obj-mtl-loader/src/objLoader.js\");\r\nconst objMtlLoader = new OBJMTLLoader();\r\n\r\nconst objPath = '../assets/sponza/sponza.obj';\r\nconst mtlPath = '../assets/sponza/sponza.mtl';\r\n\r\nconst canvas = document.querySelector('canvas');\r\nconst gl = canvas.getContext('webgl2');\r\n\r\nobjMtlLoader.load(objPath, mtlPath, function(error, result){\r\n    if(error) {\r\n        console.log(error);\r\n        return;\r\n    }\r\n\r\n    console.log(result);\r\n})\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("const OBJMTLLoader = __webpack_require__(/*! obj-mtl-loader */ \"./node_modules/obj-mtl-loader/src/objLoader.js\");\r\nconst objMtlLoader = new OBJMTLLoader();\r\n\r\nconst objPath = 'assets/sponza/sponza.obj';\r\nconst mtlPath = 'assets/sponza/sponza.mtl';\r\n\r\nconst canvas = document.querySelector('canvas');\r\nconst gl = canvas.getContext('webgl2');\r\n\r\nobjMtlLoader.load(objPath, mtlPath, function(error, result){\r\n    if(error) {\r\n        console.log(error);\r\n        return;\r\n    }\r\n\r\n    console.log(result);\r\n})\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
