@@ -510,10 +510,47 @@ eval("module.exports = extend\n\nvar hasOwnProperty = Object.prototype.hasOwnPro
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-eval("const OBJMTLLoader = __webpack_require__(/*! obj-mtl-loader */ \"./node_modules/obj-mtl-loader/src/objLoader.js\");\r\nconst objMtlLoader = new OBJMTLLoader();\r\n\r\nconst objPath = 'assets/sponza/sponza.obj';\r\nconst mtlPath = 'assets/sponza/sponza.mtl';\r\n\r\nconst canvas = document.querySelector('canvas');\r\nconst gl = canvas.getContext('webgl2');\r\n\r\nobjMtlLoader.load(objPath, mtlPath, function(error, result){\r\n    if(error) {\r\n        console.log(error);\r\n        return;\r\n    }\r\n\r\n    console.log(result);\r\n})\n\n//# sourceURL=webpack:///./src/index.js?");
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _shaders_g_buffer_pass_frag__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./shaders/g_buffer_pass_frag */ \"./src/shaders/g_buffer_pass_frag.js\");\n/* harmony import */ var _shaders_g_buffer_pass_vert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shaders/g_buffer_pass_vert */ \"./src/shaders/g_buffer_pass_vert.js\");\n/* harmony import */ var _shaders_lighting_pass_frag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./shaders/lighting_pass_frag */ \"./src/shaders/lighting_pass_frag.js\");\nconst OBJMTLLoader = __webpack_require__(/*! obj-mtl-loader */ \"./node_modules/obj-mtl-loader/src/objLoader.js\");\r\nconst objMtlLoader = new OBJMTLLoader();\r\n\r\nconst objPath = 'assets/sponza/sponza.obj';\r\nconst mtlPath = 'assets/sponza/sponza.mtl';\r\n\r\n\r\n\r\n\r\n\r\nconst canvas = document.body.querySelector('canvas');\r\nconst gl = canvas.getContext('webgl2');\r\nif(!gl){\r\n    alert(\"Trouble loading WebGL 2.0. Try using a better browser.\")\r\n}\r\n\r\n\r\nvar g_vertex_shader = gl.createShader(gl.VERTEX_SHADER);\r\ngl.shaderSource(g_vertex_shader, _shaders_g_buffer_pass_vert__WEBPACK_IMPORTED_MODULE_1__[\"g_buffer_pass_vert\"]);\r\ngl.compileShader(g_vertex_shader);\r\n\r\n\r\nvar g_fragment_shader = gl.createShader(gl.FRAGMENT_SHADER);\r\ngl.shaderSource(gl_fragment_shader, _shaders_g_buffer_pass_frag__WEBPACK_IMPORTED_MODULE_0__[\"g_buffer_pass_frag\"]);\r\ngl.compileShader(g_fragment_shader);\r\n\r\nvar g_program = gl.createProgram();\r\ngl.attachShader(g_program, g_vertex_shader);\r\ngl.attachShader(g_program, _shaders_g_buffer_pass_frag__WEBPACK_IMPORTED_MODULE_0__[\"g_buffer_pass_frag\"]);\r\ngl.linkProgram(g_program);\r\n\r\nvar l_vs = gl.createShader(gl.VERTEX_SHADER);\r\ngl.shaderSource(l_vs, lighting_pass_vert);\r\ngl.compileShader(l_vs);\r\n\r\nvar l_fs = gl.createShader(gl.FRAGMENT_SHADER);\r\ngl.shaderSource(l_fs, _shaders_lighting_pass_frag__WEBPACK_IMPORTED_MODULE_2__[\"lighting_pass_frag\"]);\r\ngl.compileShader(l_fs);\r\n\r\nvar l_program = gl.createProgram();\r\ngl.attachShader(l_program, l_fs);\r\ngl.attachShader(l_program, l_vs);\r\ngl.linkProgram(l_program);\r\n\r\n\r\nobjMtlLoader.load(objPath, mtlPath, function(error, result){\r\n    if(error) {\r\n        console.log(error);\r\n        return;\r\n    }\r\n\r\n    var vertex_buffer = gl.createBuffer();\r\n    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);\r\n    gl.bufferData(gl.ARRAY_BUFFER, new ArrayBuffer(result.vertices), gl.STATIC_DRAW);\r\n\r\n    var normal_buffer = gl.createBuffer();\r\n    gl.bindBuffer(gl.ARRAY_BUFFER, norm)\r\n    //create render targets\r\n    var gBuffer = gl.createFramebuffer();\r\n    gl.bindFramebuffer(gl.FRAMEBUFFER, gBuffer);\r\n\r\n    var gPosition = gl.createTexture(),\r\n        gNormal = gl.createTexture(), \r\n        gColor = gl.createTexture();\r\n\r\n    gl.bindTexture(gl.TEXTURE_2D, gPosition);\r\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG16F, gl.canvas.height, gl.canvas.width, 0, gl.RGB, gl.FLOAT, null);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);\r\n    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, gPosition, 0);\r\n\r\n    gl.bindTexture(gl.TEXTURE_2D, gNormal);\r\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG16F, gl.canvas.height, gl.canvas.width, 0, gl.RGB, gl.FLOAT, null);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);\r\n    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT1, gl.TEXTURE_2D, gNormal, 0);\r\n\r\n    gl.bindTexture(gl.TEXTURE_2D, gColor);\r\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG16F, gl.canvas.height, gl.canvas.width, 0, gl.RGB, gl.FLOAT, null);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);\r\n    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT2, gl.TEXTURE_2D, gColor, 0);\r\n\r\n    gl.drawBuffers(3, [gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1, gl.COLOR_ATTACHMENT2]);\r\n\r\n    gl.bindFramebuffer(gl.FRAMEBUFFER, 0);\r\n\r\n\r\n    //init diffuse texture\r\n    var diffuse_texture = gl.createTexture();\r\n    gl.bindTexture(gl.TEXTURE_2D, diffuse_texture);\r\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG16F, gl.canvas.height, gl.canvas.width, 0, gl.RGB, gl.FLOAT, null);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);\r\n\r\n    function render(){\r\n\r\n        //render to g buffer\r\n        gl.bindFramebuffer(gl.FRAMEBUFFER, gBuffer);\r\n        gl.useProgram(g_program);\r\n        gl.drawElements();\r\n        gl.bindFramebuffer(gl.FRAMEBUFFER, 0);\r\n\r\n        //render final lighting pass\r\n        gl.useProgram(l_program);\r\n        gl.drawElements();\r\n\r\n        requestAnimationFrame(render);\r\n    }\r\n\r\n    render();\r\n    console.log(result);\r\n})\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/shaders/g_buffer_pass_frag.js":
+/*!*******************************************!*\
+  !*** ./src/shaders/g_buffer_pass_frag.js ***!
+  \*******************************************/
+/*! exports provided: g_buffer_pass_frag */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"g_buffer_pass_frag\", function() { return g_buffer_pass_frag; });\nvar g_buffer_pass_frag = `\r\n    layout(location = 0) out vec3 g_pos;\r\n    layout(location = 1) out vec3 g_norm;\r\n    layout(location = 2) out vec3 g_col;\r\n\r\n    in vec2 tex_coords;\r\n    in vec3 frag_pos;\r\n    in vec3 norm;\r\n\r\n    uniform sampler2D diffuse;\r\n    \r\n    void main()\r\n    {\r\n        g_pos = frag_pos;\r\n\r\n        g_norm = normalize(norm);\r\n\r\n        g_col = texture(diffuse, tex_coords);\r\n    }\r\n`;\r\n\n\n//# sourceURL=webpack:///./src/shaders/g_buffer_pass_frag.js?");
+
+/***/ }),
+
+/***/ "./src/shaders/g_buffer_pass_vert.js":
+/*!*******************************************!*\
+  !*** ./src/shaders/g_buffer_pass_vert.js ***!
+  \*******************************************/
+/*! exports provided: g_buffer_pass_vert */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"g_buffer_pass_vert\", function() { return g_buffer_pass_vert; });\nvar g_buffer_pass_vert = `\r\n    in vec3 pos;\r\n    in vec3 normal;\r\n    in vec2 tex_coord;\r\n\r\n    uniform mat4 perspective;\r\n    uniform mat4 view;\r\n\r\n    out frag_pos;\r\n    out vec2 tex_coords;\r\n    out vec3 norm;\r\n\r\n    void main(){\r\n        gl_Position = vec4(pos, 1.0);\r\n\r\n        frag_pos = pos;\r\n        tex_coords = tex_coord;\r\n        norm = normal;\r\n    }\r\n`;\r\n\r\n\n\n//# sourceURL=webpack:///./src/shaders/g_buffer_pass_vert.js?");
+
+/***/ }),
+
+/***/ "./src/shaders/lighting_pass_frag.js":
+/*!*******************************************!*\
+  !*** ./src/shaders/lighting_pass_frag.js ***!
+  \*******************************************/
+/*! exports provided: lighting_pass_frag */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"lighting_pass_frag\", function() { return lighting_pass_frag; });\nvar lighting_pass_frag = `\r\n    out vec4 col;\r\n\r\n    in vec2 tex_coords;\r\n\r\n    uniform sampler2D g_pos;\r\n    uniform sampler2D g_norm;\r\n    uniform sampler2D g_col;\r\n\r\n    struct Light {\r\n        vec3 pos;\r\n        vec3 col;\r\n    };\r\n\r\n    uniform Light lights[10];\r\n\r\n    uniform vec3 view;\r\n    \r\n    void main()\r\n    {\r\n        vec3 position = texture(g_pos, tex_coords);\r\n        vec3 normal = texture(g_norm, tex_coords);\r\n        vec3 color = texture(g_col, tex_coords);\r\n\r\n        vec3 view_dir = normalize(pos - view);\r\n        vec3 lighting = color * 0.1;\r\n        for(int i = 0; i < 10; i++){\r\n            vec3 light_dir = normalize(lights[i].pos - position);\r\n            vec3 diffuse = max(dot(normal, light_dir), 0.0) * color * lights[i].col;\r\n            lighting += diffuse;\r\n        }\r\n\r\n        col = vec4(lighting, 1.0);\r\n    }\r\n`;\r\n\r\n\n\n//# sourceURL=webpack:///./src/shaders/lighting_pass_frag.js?");
 
 /***/ }),
 
