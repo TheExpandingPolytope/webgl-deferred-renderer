@@ -7,6 +7,7 @@ const mtlPath = 'assets/sponza/sponza.mtl';
 import {g_buffer_pass_frag} from './shaders/g_buffer_pass_frag';
 import {g_buffer_pass_vert} from './shaders/g_buffer_pass_vert';
 import {lighting_pass_frag} from './shaders/lighting_pass_frag';
+import {lighting_pass_vert} from './shaders/lighting_pass_vert';
 
 const canvas = document.body.querySelector('canvas');
 const gl = canvas.getContext('webgl2');
@@ -21,12 +22,12 @@ gl.compileShader(g_vertex_shader);
 
 
 var g_fragment_shader = gl.createShader(gl.FRAGMENT_SHADER);
-gl.shaderSource(gl_fragment_shader, g_buffer_pass_frag);
+gl.shaderSource(g_fragment_shader, g_buffer_pass_frag);
 gl.compileShader(g_fragment_shader);
 
 var g_program = gl.createProgram();
 gl.attachShader(g_program, g_vertex_shader);
-gl.attachShader(g_program, g_buffer_pass_frag);
+gl.attachShader(g_program, g_fragment_shader);
 gl.linkProgram(g_program);
 
 var l_vs = gl.createShader(gl.VERTEX_SHADER);
@@ -54,7 +55,11 @@ objMtlLoader.load(objPath, mtlPath, function(error, result){
     gl.bufferData(gl.ARRAY_BUFFER, new ArrayBuffer(result.vertices), gl.STATIC_DRAW);
 
     var normal_buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, norm)
+    gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new ArrayBuffer(result.normals), gl.STATIC_DRAW);
+
+    
+
     //create render targets
     var gBuffer = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, gBuffer);
