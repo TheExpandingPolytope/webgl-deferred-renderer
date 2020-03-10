@@ -1,6 +1,10 @@
-WebGL 2.0 Deferred Renderer
+WebGL 2.0 Deferred Renderer (In progress)
 ---------------------------
 Another implementation of the popular rendering technique. 
+
+Demo
+---------------------------
+https://theexpandingpolytope.github.io/webgl-deferred-renderer/build/
 
 References
 ---------------------------
