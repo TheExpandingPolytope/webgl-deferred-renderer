@@ -1,5 +1,4 @@
-const OBJMTLLoader = require('obj-mtl-loader');
-const objMtlLoader = new OBJMTLLoader();
+const OBJ = require('webgl-obj-loader');
 
 const objPath = 'assets/sponza/sponza.obj';
 const mtlPath = 'assets/sponza/sponza.mtl';
@@ -43,20 +42,48 @@ gl.attachShader(l_program, l_fs);
 gl.attachShader(l_program, l_vs);
 gl.linkProgram(l_program);
 
+gl.enableVertexAttribArray(0);
+gl.enableVertexAttribArray(1);
+gl.enableVertexAttribArray(2);
 
-objMtlLoader.load(objPath, mtlPath, function(error, result){
-    if(error) {
-        console.log(error);
-        return;
-    }
+OBJ.downloadModels([{obj:objPath,mtl:mtlPath,downloadMtlTextures:true}])
+.then((meshes)=>{
+    for(var mesh in meshes){
+        var meshVal = meshes[mesh];
+        console.log(meshVal);
+    
+    //set model buffer data
+    var g_vao = gl.createVertexArray();
+    gl.bindVertexArray(g_vao);
+    
+    OBJ.initMeshBuffers(gl, meshVal);
 
-    var vertex_buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new ArrayBuffer(result.vertices), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, meshVal.vertexBuffer);
+    gl.vertexAttribPointer(0, meshVal.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    var normal_buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new ArrayBuffer(result.normals), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(1);
+    gl.bindBuffer(gl.ARRAY_BUFFER, meshVal.normalBuffer);
+    gl.vertexAttribPointer(1, meshVal.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.enableVertexAttribArray(2);
+    gl.bindBuffer(gl.ARRAY_BUFFER, meshVal.textureBuffer);
+    gl.vertexAttribPointer(2, meshVal.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, meshVal.indexBuffer);
+    
+    gl.bindVertexArray(0);
+
+
+    //set quad buffer data
+    var vertices = [
+        -0.5,0.5,0.0,
+        -0.5,-0.5,0.0,
+        0.5,-0.5,0.0,
+        0.5,0.5,0.0 
+    ];
+     
+    var indices = [3,2,1,3,1,0]; 
 
     
 
@@ -103,7 +130,8 @@ objMtlLoader.load(objPath, mtlPath, function(error, result){
         //render to g buffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, gBuffer);
         gl.useProgram(g_program);
-        gl.drawElements();
+        gl.bindVertexArray(g_vao);
+        gl.drawElements(gl.TRIANGLES, model.mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
         gl.bindFramebuffer(gl.FRAMEBUFFER, 0);
 
         //render final lighting pass
@@ -115,4 +143,5 @@ objMtlLoader.load(objPath, mtlPath, function(error, result){
 
     render();
     console.log(result);
+    }
 })

@@ -1,7 +1,7 @@
 var g_buffer_pass_vert = `
-    in vec3 pos;
-    in vec3 normal;
-    in vec2 tex_coord;
+    layout(location = 0) in vec3 pos;
+    layout(location = 1) in vec3 normal;
+    layout(location = 2) in vec2 tex_coord;
 
     uniform mat4 perspective;
     uniform mat4 view;
